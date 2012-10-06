@@ -145,7 +145,8 @@ class Renderer
 
 		if ($name === '.')
 		{
-			return isset($vars->{'.'}) ? $vars->{'.'} : null;
+			$var = isset($vars->{'.'}) ? $vars->{'.'} : null;
+			return is_callable($var) ? $var() : $var;
 		}
 
 		$name = explode('.', $name);
@@ -155,7 +156,8 @@ class Renderer
 		{
 			if (count($name) === 1)
 			{
-				return $vars->{$name[0]};
+				$var = $vars->{$name[0]};
+				return is_callable($var) ? $var() : $var;
 			}
 
 			$name_first = $name[0];
