@@ -57,7 +57,7 @@ class Parser
 				case '/':
 					$node = array_pop($stack);
 
-					if (!is_object($node) || $node->variable !== $tag_name)
+					if ($node->variable !== $tag_name)
 					{
 						throw new TagMismatchException('Unexpected close: ' . $tag_name);
 					}
