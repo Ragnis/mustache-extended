@@ -17,7 +17,6 @@ class Parser
 		$search_offset_prev = 0;
 		$search_offset = 0;
 
-		$stack_begin = 0;
 		$stack = array();
 
 		while (preg_match('/\{\{(?<type>[#^\/])?(?<tag_name>[a-zA-Z0-9_\-.]+)(?<filters>[|][a-z0-9\-_|]+)?()\}\}/',
@@ -44,7 +43,7 @@ class Parser
 				}
 				else
 				{
-					$stack[count($stack) - 1]->node->append($node);
+					$stack[count($stack) - 1]->append($node);
 				}
 			}
 
@@ -61,19 +60,16 @@ class Parser
 					}
 					else
 					{
-						$stack[count($stack) - 1]->node->append($node);
+						$stack[count($stack) - 1]->append($node);
 					}
 
-					$stack[] = (object) array(
-						'node' => $node,
-						'begin_offset' => $offset + strlen($match)
-					);
+					$stack[] = $node;
 				break;
 
 				case '/':
 					$node = array_pop($stack);
 
-					if (!is_object($node) || $node->node->variable !== $tag_name)
+					if (!is_object($node) || $node->variable !== $tag_name)
 					{
 						throw new TagMismatchException('Unexpected close: ' . $tag_name);
 					}
@@ -90,7 +86,7 @@ class Parser
 					}
 					else
 					{
-						$stack[count($stack) - 1]->node->append($node);
+						$stack[count($stack) - 1]->append($node);
 					}
 
 					break;
