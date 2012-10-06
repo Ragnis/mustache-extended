@@ -16,7 +16,7 @@ class Autoloader
 		'Mustache\Filters\Escape' => 'filters/escape.php',
 		'Mustache\Filters\Bool' => 'filters/bool.php',
 		'Mustache\TagMismatchException' => 'exceptions/tag_mismatch.php',
-		'Mustache\FilterNotFoundException' => 'excpetions/filter_not_found.php'
+		'Mustache\FilterNotFoundException' => 'exceptions/filter_not_found.php'
 	);
 
 	/**
