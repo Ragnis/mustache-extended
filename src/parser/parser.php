@@ -31,20 +31,13 @@ class Parser
 			$search_offset_prev = $search_offset;
 			$search_offset = $offset + strlen($match);
 
+			$parent = count($stack) > 0 ? $stack[count($stack) - 1] : $root;
+
 			$text = substr($template, $search_offset_prev, $offset - $search_offset_prev);
 
 			if (strlen($text) > 0)
 			{
-				$node = new ParserNodeText($text);
-
-				if (count($stack) === 0)
-				{
-					$root->append($node);
-				}
-				else
-				{
-					$stack[count($stack) - 1]->append($node);
-				}
+				$parent->append(new ParserNodeText($text));
 			}
 
 			switch ($type)
@@ -54,15 +47,7 @@ class Parser
 					$node = new ParserNodeBlock($tag_name, $type === '^');
 					$node->filters = $filters;
 
-					if (count($stack) === 0)
-					{
-						$root->append($node);
-					}
-					else
-					{
-						$stack[count($stack) - 1]->append($node);
-					}
-
+					$parent->append($node);
 					$stack[] = $node;
 				break;
 
@@ -79,15 +64,7 @@ class Parser
 				case '': // A variable
 					$node = new ParserNodeVariable($tag_name);
 					$node->filters = $filters;
-
-					if (count($stack) === 0)
-					{
-						$root->append($node);
-					}
-					else
-					{
-						$stack[count($stack) - 1]->append($node);
-					}
+					$parent->append($node);
 
 					break;
 			}
