@@ -20,9 +20,9 @@ class Parser
 		$stack = array();
 
 		// Use raw filter instead of triple-brace tags.
-		$template = preg_replace('/\{\{\{([#^\/A-Za-z0-9_\-.|]+)\}\}\}/', '{{$1|raw}}', $template);
+		$template = preg_replace('/\{\{\{([#^\/A-Za-z0-9_\-.\/|]+)\}\}\}/', '{{$1|raw}}', $template);
 
-		while (preg_match('/\{\{(?<type>[#^\/])?(?<tag_name>[a-zA-Z0-9_\-.]+)(?<filters>[|][a-z0-9\-_|]+)?()\}\}/',
+		while (preg_match('/\{\{(?<type>[#^\/])?(?<tag_name>[a-zA-Z0-9_\-.\/]+)(?<filters>[|][a-z0-9\-_|]+)?()\}\}/',
 			$template, $matches, PREG_OFFSET_CAPTURE, $search_offset))
 		{
 			$match = $matches[0][0];
