@@ -12,6 +12,7 @@ class Autoloader
 		'Mustache\ParserNodeVariable' => 'parser/node_variable.php',
 		'Mustache\ParserNodeText' => 'parser/node_text.php',
 		'Mustache\Filter' => 'filter.php',
+		'Mustache\Filters\Raw' => 'filters/raw.php',
 		'Mustache\Filters\Escape' => 'filters/escape.php',
 		'Mustache\Filters\Bool' => 'filters/bool.php',
 		'Mustache\TagMismatchException' => 'exceptions/tag_mismatch.php',
@@ -46,5 +47,6 @@ class Autoloader
 Autoloader::register();
 
 // Register core filters
+Filter::register(new Filters\Raw());
 Filter::register(new Filters\Escape());
 Filter::register(new Filters\Bool());

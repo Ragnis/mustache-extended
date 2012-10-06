@@ -39,6 +39,13 @@ class Renderer
 				case 'Mustache\ParserNodeVariable':
 					$var = $this->find_variable($child->variable, $vars);
 					$var = $this->apply_filters($child->filters, $var);
+
+					// Escape variables by default
+					if (!in_array('raw', $child->filters))
+					{
+						$var = $this->apply_filters(array('escape'), $var);
+					}
+
 					$out[] = $var;
 				break;
 
