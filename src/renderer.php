@@ -27,9 +27,9 @@ class Renderer
 	{
 		$out = array();
 
-		if (!is_object($vars))
+		if (is_object($vars))
 		{
-			$vars = (object) $vars;
+			$vars = get_object_vars($vars);
 		}
 
 		foreach ($node->children as $child)
@@ -71,7 +71,7 @@ class Renderer
 								$value = get_object_vars($value);
 							}
 
-							$local_vars = clone $vars;
+							$local_vars = $vars;
 
 							// Insert array item variables into local scope
 							if (is_array($value))
@@ -80,7 +80,7 @@ class Renderer
 							}
 							else
 							{
-								$local_vars->{'.'} = $value;
+								$local_vars['.'] = $value;
 							}
 
 							// Create a fake parent for children so we can pass
@@ -138,32 +138,32 @@ class Renderer
 	 */
 	protected function find_variable ($name, $vars)
 	{
-		if (!is_object($vars))
+		if (is_object($vars))
 		{
-			$vars = (object) $vars;
+			$vars = get_object_vars($vars);
 		}
 
 		if ($name === '.')
 		{
-			$var = isset($vars->{'.'}) ? $vars->{'.'} : null;
+			$var = isset($vars['.']) ? $vars['.'] : null;
 			return is_callable($var) ? $var() : $var;
 		}
 
 		$name = explode('.', $name);
 		$name_first = $name[0];
 
-		if (isset($vars->{$name[0]}))
+		if (isset($vars[$name[0]]))
 		{
 			if (count($name) === 1)
 			{
-				$var = $vars->{$name[0]};
+				$var = $vars[$name[0]];
 				return is_callable($var) ? $var() : $var;
 			}
 
 			$name_first = $name[0];
 			array_shift($name);
 
-			return $this->find_variable(implode('.', $name), $vars->{$name_first});
+			return $this->find_variable(implode('.', $name), $vars[$name_first]);
 		}
 
 		return null;
