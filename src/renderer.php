@@ -57,11 +57,6 @@ class Renderer
 					$arg = $this->find_variable($child->variable, $vars, true);
 					$arg = $this->apply_filters($child->filters, $arg);
 
-					if (is_object($arg))
-					{
-						$arg = (array) $arg;
-					}
-
 					if (is_array($arg))
 					{
 						foreach ($arg as $key => $value)
