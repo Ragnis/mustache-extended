@@ -12,7 +12,8 @@ class Renderer
 	 */
 	public function render ($template, $vars)
 	{
-		$root = (new Parser())->parse($template);
+		$parser = new Parser();
+		$root = $parser->parse($template);
 		return $this->render_node($root, $vars);
 	}
 
