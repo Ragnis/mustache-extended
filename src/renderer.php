@@ -27,9 +27,9 @@ class Renderer
 	{
 		$out = array();
 
-		if (is_object($vars))
+		if (!is_object($vars))
 		{
-			$vars = get_object_vars($vars);
+			$vars = (object) $vars;
 		}
 
 		foreach ($node->children as $child)
@@ -37,7 +37,7 @@ class Renderer
 			switch (get_class($child))
 			{
 				case 'Mustache\ParserNodeVariable':
-					$var = $this->find_variable($child->variable, $vars);
+					$var = $this->find_variable($child->variable, $vars, true);
 					$var = $this->apply_filters($child->filters, $var);
 
 					// Escape variables by default
@@ -54,37 +54,28 @@ class Renderer
 				break;
 
 				case 'Mustache\ParserNodeBlock':
-					$arg = $this->find_variable($child->variable, $vars);
+					$arg = $this->find_variable($child->variable, $vars, true);
 					$arg = $this->apply_filters($child->filters, $arg);
 
 					if (is_object($arg))
 					{
-						$arg = get_object_vars($arg);
+						$arg = (array) $arg;
 					}
 
 					if (is_array($arg))
 					{
 						foreach ($arg as $key => $value)
 						{
-							if (is_object($value))
-							{
-								$value = get_object_vars($value);
-							}
-
-							$local_vars = $vars;
-
-							// Insert array item variables into local scope
 							if (is_array($value))
 							{
-								$local_vars = (object) array_merge((array) $local_vars, $value);
-							}
-							else
-							{
-								$local_vars['.'] = $value;
+								$value = (object) $value;
 							}
 
+							$local_vars = clone $vars;
+							$local_vars->{'.'} = $value;
+
 							// Create a fake parent for children so we can pass
-							// them to parse_node
+							// them to render_node
 							$fake_parent = new ParserNodeContainer();
 							$fake_parent->children = $child->children;
 
@@ -134,36 +125,53 @@ class Renderer
 	 *
 	 * @param string $name
 	 * @param mixed $vars
+	 * @param bool $look_in_dot
 	 * @return mixed
 	 */
-	protected function find_variable ($name, $vars)
+	protected function find_variable ($name, $vars, $look_in_dot = false)
 	{
-		if (is_object($vars))
+		if ($look_in_dot)
 		{
-			$vars = get_object_vars($vars);
+			$var = null;
+
+			if (isset($vars->{'.'}))
+			{
+				$var = $this->find_variable($name, $vars->{'.'});
+			}
+
+			if ($var === null)
+			{
+				$var = $this->find_variable($name, $vars);
+			}
+
+			return $var;
+		}
+
+		if (!is_object($vars))
+		{
+			$vars = (object) $vars;
 		}
 
 		if ($name === '.')
 		{
-			$var = isset($vars['.']) ? $vars['.'] : null;
+			$var = isset($vars->{'.'}) ? $vars->{'.'} : null;
 			return is_callable($var) ? $var() : $var;
 		}
 
 		$name = explode('.', $name);
-		$name_first = $name[0];
 
-		if (isset($vars[$name[0]]))
+		if (isset($vars->{$name[0]}))
 		{
 			if (count($name) === 1)
 			{
-				$var = $vars[$name[0]];
-				return is_callable($var) ? $var() : $var;
+				$var = $vars->{$name[0]};
+				return is_callable($var) ? $var() : $var; 
 			}
 
 			$name_first = $name[0];
 			array_shift($name);
 
-			return $this->find_variable(implode('.', $name), $vars[$name_first]);
+			return $this->find_variable(implode('.', $name), $vars->{$name_first});
 		}
 
 		return null;
