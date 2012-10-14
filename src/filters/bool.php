@@ -14,6 +14,11 @@ class Bool extends \Mustache\Filter
 	 */
 	public function filter ($data)
 	{
+		if ($data === '0')
+		{
+			return true;
+		}
+
 		return (bool) $data;
 	}
 }

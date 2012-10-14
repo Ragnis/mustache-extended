@@ -2,7 +2,7 @@
 
 require_once(dirname(__FILE__) . '/../../src/mustache.php');
 
-class RendererTest extends PHPUnit_Framework_TestCase
+class Filters_BoolTest extends PHPUnit_Framework_TestCase
 {
 	/**
 	 * @var \Mustache\Renderer
