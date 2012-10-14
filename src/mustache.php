@@ -15,6 +15,7 @@ class Autoloader
 		'Mustache\Filters\Raw' => 'filters/raw.php',
 		'Mustache\Filters\Escape' => 'filters/escape.php',
 		'Mustache\Filters\Bool' => 'filters/bool.php',
+		'Mustache\Filters\ToA' => 'filters/to_a.php',
 		'Mustache\TagMismatchException' => 'exceptions/tag_mismatch.php',
 		'Mustache\FilterNotFoundException' => 'exceptions/filter_not_found.php'
 	);
@@ -50,3 +51,4 @@ Autoloader::register();
 Filter::register(new Filters\Raw());
 Filter::register(new Filters\Escape());
 Filter::register(new Filters\Bool());
+Filter::register(new Filters\ToA());
