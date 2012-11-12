@@ -161,7 +161,7 @@ class Renderer
 			if (count($name) === 1)
 			{
 				$var = $vars->{$name[0]};
-				return is_callable($var) ? $var() : $var; 
+				return is_a($var, 'Closure') ? $var() : $var;
 			}
 
 			$name_first = $name[0];
