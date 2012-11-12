@@ -151,7 +151,7 @@ class Renderer
 		if ($name === '.')
 		{
 			$var = isset($vars->{'.'}) ? $vars->{'.'} : null;
-			return is_callable($var) ? $var() : $var;
+			return is_a($var, 'Closure') ? $var() : $var;
 		}
 
 		$name = explode('.', $name);
