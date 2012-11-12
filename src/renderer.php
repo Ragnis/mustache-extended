@@ -170,6 +170,11 @@ class Renderer
 			return $this->find_variable(implode('.', $name), $vars->{$name_first});
 		}
 
+		if (method_exists($vars, $name[0]) && count($name) === 1)
+		{
+			return $vars->{$name[0]}();
+		}
+
 		return null;
 	}
 }
