@@ -14,6 +14,6 @@ class Escape extends \Mustache\Filter
 	 */
 	public function filter ($data)
 	{
-		return htmlentities($data);
+		return htmlspecialchars($data);
 	}
 }
