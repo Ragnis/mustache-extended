@@ -14,6 +14,9 @@ class Escape extends \Mustache\Filter
 	 */
 	public function filter ($data)
 	{
-		return htmlspecialchars($data);
+		if (is_string($data) || is_bool($data) || is_numeric($data))
+		{
+			return htmlspecialchars((string) $data);
+		}
 	}
 }
